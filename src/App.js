@@ -9,13 +9,16 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   firebase.auth().onAuthStateChanged((currentUser) => {
-    if (!currentUser) {
+    console.log(currentUser);
+
+    if (!currentUser?.emailVerified) {
+      firebase.auth().signOut();
       setUser(null);
     } else {
       setUser(currentUser);
     }
+
     setLoading(false);
-    console.log(currentUser ? "Estoy log" : "nel maje");
   });
 
   if (loading) {
@@ -28,7 +31,7 @@ function App() {
       {!user ? <Auth /> : <UserLogged />}
       <ToastContainer
         position="top-center"
-        autoClose={999995000}
+        autoClose={5000}
         hideProgressBar
         closeOnClick
         rtl={false}

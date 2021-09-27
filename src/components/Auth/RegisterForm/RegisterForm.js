@@ -54,7 +54,8 @@ export default function RegisterForm(props) {
         .auth()
         .createUserWithEmailAndPassword(formData.email, formData.password)
         .then(() => {
-          console.log("registro completado");
+          changeUserName();
+          sendVerificationEmail();
         })
         .catch(() => {
           toast.error("Error al crear cuenta.");
@@ -64,6 +65,29 @@ export default function RegisterForm(props) {
           setSelectedForm(null);
         });
     }
+  };
+
+  const changeUserName = () => {
+    firebase
+      .auth()
+      .currentUser.updateProfile({
+        displayName: formData.username,
+      })
+      .catch(() => {
+        toast.error("Error al asignar nombre de usuario ");
+      });
+  };
+
+  const sendVerificationEmail = () => {
+    firebase
+      .auth()
+      .currentUser.sendEmailVerification()
+      .then(() => {
+        toast.success("Se ha enviado un email de verificacion");
+      })
+      .catch(() => {
+        toast.error("Error al enviar el email de verificacion");
+      });
   };
 
   return (
